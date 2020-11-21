@@ -1,9 +1,18 @@
 package it.unibo.oop.lab.mvc;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  * A very simple program using a graphical interface.
@@ -11,8 +20,8 @@ import javax.swing.JFrame;
  */
 public final class SimpleGUI {
 
-    private final JFrame frame = new JFrame();
-
+    private final JFrame frame = new JFrame("Esercizio 5");
+    private final Controller controller = new ControllerImpl();
     /*
      * Once the Controller is done, implement this class in such a way that:
      * 
@@ -61,5 +70,58 @@ public final class SimpleGUI {
          */
         frame.setLocationByPlatform(true);
     }
-
+    /**
+     * Method which creates the frame contents.
+     */
+    private void createframe() {
+        /* 
+         * 3) The graphical interface consists of a JTextField in the upper part of the frame, 
+         * a JTextArea in the center and two buttons below it: "Print", and "Show history". 
+         * SUGGESTION: Use a JPanel with BorderLayout
+         * 
+         * 4) By default, if the graphical interface is closed the program must exit
+         * (call setDefaultCloseOperation)
+         * 
+         * 5) The behavior of the program is that, if "Print" is pressed, the
+         * controller is asked to show the string contained in the text field on standard output. 
+         * If "show history" is pressed instead, the GUI must show all the prints that
+         * have been done to this moment in the text area.
+         */
+        final JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        final JTextField textfield = new JTextField();
+        panel.add(textfield, BorderLayout.NORTH);
+        final JTextArea textarea = new JTextArea();
+        textarea.setEditable(false);
+        panel.add(textarea, BorderLayout.CENTER);
+        final JPanel panel2 = new JPanel(new FlowLayout());
+        final JButton button1 = new JButton("Print");
+        button1.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                controller.setNextString(textfield.getText());
+                controller.printCurrentString();
+            }
+        });
+        final JButton button2 = new JButton("Show history");
+        button2.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                textarea.setText("");
+                for (final String s : Arrays.asList(controller.getPrintedStringsHistory())) {
+                    textarea.append(s + '\n');
+                }
+            }
+        });
+        panel2.add(button1);
+        panel2.add(button2);
+        panel.add(panel2, BorderLayout.SOUTH);
+        frame.getContentPane().add(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+    /**
+     * @param argv ignored
+     */
+    public static void main(final String[] argv) {
+        new SimpleGUI().createframe();
+    }
 }
