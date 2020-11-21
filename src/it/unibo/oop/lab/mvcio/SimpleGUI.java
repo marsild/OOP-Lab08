@@ -1,9 +1,18 @@
 package it.unibo.oop.lab.mvcio;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * A very simple program using a graphical interface.
@@ -11,8 +20,8 @@ import javax.swing.JFrame;
  */
 public final class SimpleGUI {
 
-    private final JFrame frame = new JFrame();
-
+    private final JFrame frame = new JFrame("Esercizio 3");
+    private final Controller controller = new Controller();
     /*
      * Once the Controller is done, implement this class in such a way that:
      * 
@@ -58,5 +67,35 @@ public final class SimpleGUI {
          */
         frame.setLocationByPlatform(true);
     }
+    /**
+     * Method which creates the frame contents.
+     */
+    private void createframe() {
+        final JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        final JTextArea textarea = new JTextArea();
+        panel.add(textarea);
+        final JButton button = new JButton("Save");
+        button.addActionListener(new ActionListener() {
 
+            public void actionPerformed(final ActionEvent e) {
+                try (PrintStream ps = new PrintStream(controller.getPath())) {
+                    ps.print(textarea.getText());
+                } catch (FileNotFoundException e1) {
+                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                }
+            }
+        });
+        panel.add(button, BorderLayout.SOUTH);
+        frame.getContentPane().add(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+    /**
+     * @param argv ignored
+     */
+    public static void main(final String[] argv) {
+        new SimpleGUI().createframe();
+    }
 }
