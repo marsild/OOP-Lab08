@@ -36,7 +36,7 @@ public class BadIOGUI {
     private final JFrame frame = new JFrame(TITLE);
 
     /**
-     * Default constructor with no arguments which creates the frame and its contents.
+     * Default constructor with no arguments which creates the frame contents.
      */
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
