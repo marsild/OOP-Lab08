@@ -26,14 +26,19 @@ public class Controller {
      * @param f file to be set as current file
      */
     public void setFile(final File f) {
-        this.file = f;
+        final File parent = f.getParentFile();
+        if (parent.exists()) {
+            this.file = f;
+        } else {
+            throw new IllegalArgumentException("Cannot save in a non-existing folder.");
+        }
     }
     /**
      * A method for setting a File, from his path, as current file.
      * @param s file path, to be set as current file
      */
     public void setFileFromPath(final String s) {
-        this.file = new File(s);
+        this.setFile(new File(s));
     }
     /**
      * A method for getting the current File.
