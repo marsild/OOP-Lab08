@@ -75,12 +75,14 @@ public final class SimpleGUIWithFileChooser {
             public void actionPerformed(final ActionEvent e) {
                 final JFileChooser fc = new JFileChooser();
                 final int value = fc.showOpenDialog(button2);
-                if (value == JFileChooser.APPROVE_OPTION) {
+                switch (value) {
+                case JFileChooser.APPROVE_OPTION:
                     controller.setFile(fc.getSelectedFile());
                     textfield.setText(controller.getPath());
-                } else if (value == JFileChooser.CANCEL_OPTION) {
-                    //do nothing
-                } else {
+                    break;
+                case JFileChooser.CANCEL_OPTION:
+                    break;
+                default:
                     JOptionPane.showMessageDialog(frame, "An error has occurred", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
