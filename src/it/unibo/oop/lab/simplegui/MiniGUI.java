@@ -10,8 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -29,13 +31,19 @@ public class MiniGUI {
     private final JFrame frame = new JFrame(TITLE);
 
     /**
-     * 
+     * Default constructor with no arguments which creates the frame and its contents.
      */
     public MiniGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
+        final JPanel esUno = new JPanel();
+        esUno.setLayout(new BoxLayout(esUno, BoxLayout.X_AXIS));
+        canvas.add(esUno, BorderLayout.CENTER);
         final JButton write = new JButton("Print a random number on standard output");
-        canvas.add(write, BorderLayout.CENTER);
+        //canvas.add(write, BorderLayout.CENTER);
+        esUno.add(write);
+        final JLabel lb = new JLabel("Result");
+        canvas.add(lb, BorderLayout.NORTH);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -44,11 +52,15 @@ public class MiniGUI {
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                System.out.println(rng.nextInt());
+                final int randomNum = rng.nextInt();
+                lb.setText("Result: " + randomNum);
+                System.out.println(randomNum);
             }
         });
     }
-
+    /**
+     * Method used to set the dimensions of the frame and to display it.
+     */
     private void display() {
         /*
          * Make the frame one fifth the resolution of the screen. This very method is
@@ -68,6 +80,7 @@ public class MiniGUI {
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+        frame.pack();
         /*
          * OK, ready to pull the frame onscreen
          */
