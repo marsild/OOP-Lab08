@@ -5,10 +5,14 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -32,13 +36,18 @@ public class BadIOGUI {
     private final JFrame frame = new JFrame(TITLE);
 
     /**
-     * 
+     * Default constructor with no arguments which creates the frame and its contents.
      */
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
+        final JPanel esUno = new JPanel();
+        esUno.setLayout(new BoxLayout(esUno, BoxLayout.X_AXIS));
+        canvas.add(esUno, BorderLayout.CENTER);
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
+        esUno.add(write);
+        final JButton read = new JButton("Read");
+        esUno.add(read);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -62,8 +71,30 @@ public class BadIOGUI {
                 }
             }
         });
+        read.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                try (BufferedReader r = new BufferedReader(new FileReader(PATH))) {
+                    String line;
+                    do {
+                        line = r.readLine();
+                        if (line != null) {
+                            System.out.println(line);
+                        }
+                    }
+                    while (line != null);
+                } catch (FileNotFoundException e1) {
+                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                } catch (IOException e2) {
+                    JOptionPane.showMessageDialog(frame, e2, "Error", JOptionPane.ERROR_MESSAGE);
+                    e2.printStackTrace();
+                }
+            }
+        });
     }
-
+    /**
+     * Method used to set the dimensions of the frame and to display it.
+     */
     private void display() {
         /*
          * Make the frame one fifth the resolution of the screen. This very method is
@@ -83,6 +114,10 @@ public class BadIOGUI {
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+        /*
+         * resizing the frame to the minimum size prior to displaying.
+         */
+        frame.pack();
         /*
          * OK, ready to pull the frame onscreen
          */
